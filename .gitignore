@@ -1,0 +1,56 @@
+# ─── OS ─────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+
+# ─── Environment (secrets) ──────────────────────────────────
+# Environment files may contain secrets. Share only explicit examples.
+.env
+.env.*
+.env.*.local
+!.env.example
+**/.env.example
+
+# ─── Python ─────────────────────────────────────────────────
+__pycache__/
+.pytest_cache/
+.pytest_tmp/
+*.py[cod]
+.venv/
+venv/
+dist/
+build/
+*.egg-info/
+
+# ─── Node ───────────────────────────────────────────────────
+node_modules/
+.next/
+out/
+frontend/dist/
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# ─── Databases and source data (never commit) ──────────────
+*.db
+*.sqlite
+*.sqlite3
+*.xlsx
+*.xls
+*.csv
+*.tsv
+data/
+exports/
+
+# ─── Logs ───────────────────────────────────────────────────
+*.log
+*.aux
+*.out
+*.toc
+*.synctex.gz
+
+# ─── Docs ───────────────────────────────────────────────────
+
+docs/report/
+
+# Local conversion brief; it intentionally names private-release hazards.
+Codex Prompt * DialyCore Open-Source Conversion.md

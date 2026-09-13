@@ -1,0 +1,53 @@
+import * as React from "react";
+import { cn } from "../../lib/utils";
+
+export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  variant?:
+    | "default"
+    | "destructive"
+    | "outline"
+    | "secondary"
+    | "ghost"
+    | "link";
+  size?: "default" | "sm" | "lg" | "icon";
+}
+
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ className, variant = "default", size = "default", ...props }, ref) => {
+    const variants = {
+      default:
+        "bg-primary text-primary-foreground hover:bg-primary/90 shadow-md hover:shadow-lg active:shadow-sm",
+      destructive:
+        "bg-destructive text-destructive-foreground hover:bg-destructive/90 shadow-md hover:shadow-lg active:shadow-sm",
+      outline:
+        "border border-input bg-background hover:bg-primary/10 hover:text-primary hover:border-primary active:bg-primary/20",
+      secondary:
+        "bg-secondary text-secondary-foreground hover:bg-secondary/80 shadow-sm hover:shadow-md active:shadow-none",
+      ghost: "hover:bg-primary/10 hover:text-primary active:bg-primary/20",
+      link: "text-primary underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+    };
+
+    const sizes = {
+      default: "h-10 sm:h-11 px-4 py-2 text-sm font-medium rounded-lg",
+      sm: "h-9 rounded-md px-3 text-xs sm:text-sm",
+      lg: "h-11 sm:h-12 rounded-lg px-8 text-base font-medium",
+      icon: "h-10 sm:h-11 w-10 sm:w-11 rounded-lg",
+    };
+
+    return (
+      <button
+        ref={ref}
+        className={cn(
+          "inline-flex items-center justify-center font-medium ring-offset-background transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 disabled:cursor-not-allowed",
+          variants[variant],
+          sizes[size],
+          className,
+        )}
+        {...props}
+      />
+    );
+  },
+);
+Button.displayName = "Button";
+
+export { Button };

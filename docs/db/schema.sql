@@ -1,0 +1,10 @@
+-- DialyCore schema ownership note
+--
+-- The executable schema is intentionally defined once in:
+--   backend/app/db/models.py
+--
+-- SQLAlchemy Base.metadata creates all current SQLite tables when
+-- backend/generate_demo_data.py or app.main starts. This file intentionally
+-- contains no hand-maintained DDL that could drift from the application model.
+-- To inspect a disposable schema, generate dialycore_demo.db locally and use
+-- SQLite's `.schema` command. Never commit the resulting database or dump.

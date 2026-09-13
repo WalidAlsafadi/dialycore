@@ -1,0 +1,12 @@
+{
+  "name": "dialycore",
+  "private": true,
+  "scripts": {
+    "backend:test": "cd backend && python -m pytest --basetemp .pytest_tmp",
+    "frontend:dev": "npm --prefix frontend run dev",
+    "frontend:typecheck": "npm --prefix frontend run typecheck",
+    "frontend:build": "npm --prefix frontend run build",
+    "public-release-check": "python scripts/public_release_check.py",
+    "check": "npm run backend:test && npm run frontend:typecheck && npm run frontend:build && npm run public-release-check"
+  }
+}
