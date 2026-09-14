@@ -51,9 +51,8 @@ upload records, or use this profile with patient or staff information.
 Free hosting can sleep when idle, so the first request after inactivity may take
 longer. This profile treats every restart as a clean reset of the demo.
 
-Copy the resulting API origin, for example
-`https://dialycore-api.onrender.com`, and confirm its `/health` endpoint
-returns `{"status":"ok"}`.
+The current public API is `https://dialycore-demo.onrender.com`. Confirm its
+`/health` endpoint returns `{"status":"ok"}`.
 
 ## 2. Deploy the frontend on Vercel
 
@@ -64,21 +63,19 @@ Import the same GitHub repository into Vercel with these settings:
 - Root directory: `frontend`
 - Build command: `npm run build`
 - Output directory: `dist`
-- Environment variable: `VITE_API_BASE_URL=https://your-api.onrender.com`
+- Environment variable: `VITE_API_BASE_URL=https://dialycore-demo.onrender.com`
 
 Set the environment variable for Production and Preview, then deploy.
 `frontend/vercel.json` rewrites direct requests to the SPA entry point, so
 browser URLs remain clean paths such as `/dashboard`, `/patients/42`, and
 `/schedule`.
 
-The Render Blueprint initially permits HTTPS origins whose Vercel hostname
-starts with `dialycore`. After Vercel assigns the stable production domain,
-replace `CORS_ORIGIN_REGEX` on Render with an empty value and set
-`CORS_ORIGINS` to that exact origin.
+The Render Blueprint permits the exact production origin,
+`https://dialycore.vercel.app`, plus DialyCore-scoped Vercel preview origins.
 
 ## 3. Verify the public deployment
 
-1. Open the Vercel URL and confirm the Login page appears immediately.
+1. Open `https://dialycore.vercel.app` and confirm the Login page appears immediately.
 2. Select **Explore the Demo** and allow up to one minute for the first backend wake-up.
 3. Refresh `/dashboard` directly and confirm the route still renders.
 4. Confirm staff password login and direct mutation requests return `403`.

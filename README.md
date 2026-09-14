@@ -4,6 +4,8 @@ Expert-informed, open-source hemodialysis unit records and workflow management.
 
 DialyCore is a full-stack reference application that turns complex dialysis-unit documentation needs into a clear, role-aware web workflow. It covers patient records, recurring schedules, treatment sessions, doctor orders, medications, investigations, vascular access, serology, and unit-level analytics.
 
+[Explore the live read-only demo](https://dialycore.vercel.app)
+
 The product requirements and workflow model were shaped with input from professionals familiar with hemodialysis-unit operations. They are not arbitrary software assumptions. DialyCore still remains a reference implementation—not a certified clinical system—and every real-world adaptation requires local clinical, regulatory, privacy, and security validation.
 
 > [!IMPORTANT]
