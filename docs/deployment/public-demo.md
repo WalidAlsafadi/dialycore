@@ -45,9 +45,11 @@ documented for local development must receive `403` from this image.
 
 ## Render Blueprint
 
-The root `render.yaml` describes one free Docker web service with a `/health`
-health check and a generated JWT secret. Connect the GitHub repository in the
-Render dashboard and create a Blueprint from the repository.
+The root `render.yaml` describes one free Docker web service in Render's
+Frankfurt region, with a `/health` health check and a generated JWT secret.
+Connect the GitHub repository in the Render dashboard and create a Blueprint
+from the repository. Automatic deploys wait for the linked commit's GitHub
+checks to pass.
 
 The database is intentionally ephemeral: it is regenerated from source-owned
 synthetic fixtures whenever the service starts. Do not attach a real database,
