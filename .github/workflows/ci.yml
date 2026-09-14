@@ -51,3 +51,6 @@ jobs:
 
       - name: Scan public release
         run: python scripts/public_release_check.py
+
+      - name: Build public demo container
+        run: docker build --tag dialycore-public-demo:ci .

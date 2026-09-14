@@ -2,9 +2,8 @@
 
 ## Reporting a vulnerability
 
-Use the private security-reporting channel configured on the eventual public repository. Until that channel exists, contact the repository owner privately. Do not publish exploit details, credentials, or sensitive findings in an issue.
-
-The maintainer must add a monitored private security contact or enable GitHub private vulnerability reporting before launch.
+Use GitHub private vulnerability reporting for this repository. Do not publish
+exploit details, credentials, or sensitive findings in an issue.
 
 ## Never submit healthcare data
 
