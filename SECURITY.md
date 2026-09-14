@@ -18,4 +18,9 @@ The repository ships development defaults and obvious demo credentials. Before a
 
 Passwordless guest access is intended only for a synthetic public demonstration and is read-only at the API. Set `ENABLE_DEMO_GUEST=false` for staff-only environments, and never expose real records through a guest-enabled instance.
 
+For a public synthetic demonstration, also set `PUBLIC_DEMO_MODE=true`. This
+disables staff password login, administrator access, mutations, and public guest
+audit writes at the API layer. It is not a substitute for a complete production
+security review.
+
 DialyCore is not a certified medical device and makes no compliance or production-readiness claim.

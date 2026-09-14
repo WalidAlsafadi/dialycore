@@ -6,6 +6,7 @@ from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
+from app.core import security
 from app.db.database import get_db
 from app.main import app
 from generate_demo_data import DEMO_DATABASE_NAME, generate_demo_data
@@ -97,3 +98,61 @@ def test_guest_cannot_use_password_login(guest_client):
         },
     )
     assert response.status_code == 400
+
+
+def test_public_demo_allows_read_only_guest_without_writing_audit_log(
+    guest_client, monkeypatch
+):
+    client, path = guest_client
+    monkeypatch.setattr(security, "PUBLIC_DEMO_MODE", True)
+
+    connection = sqlite3.connect(path)
+    audit_count_before = connection.execute("SELECT COUNT(*) FROM audit_log").fetchone()[0]
+    connection.close()
+
+    response = client.post("/api/auth/guest")
+    assert response.status_code == 200
+    headers = {"Authorization": f"Bearer {response.json()['access_token']}"}
+    assert client.get("/api/patients", headers=headers).status_code == 200
+
+    connection = sqlite3.connect(path)
+    audit_count_after = connection.execute("SELECT COUNT(*) FROM audit_log").fetchone()[0]
+    connection.close()
+    assert audit_count_after == audit_count_before
+
+
+def test_public_demo_blocks_staff_login_and_all_privileged_access(
+    guest_client, monkeypatch
+):
+    client, path = guest_client
+    monkeypatch.setattr(security, "PUBLIC_DEMO_MODE", True)
+
+    login = client.post(
+        "/api/auth/login",
+        json={
+            "email": "admin@demo.dialycore.local",
+            "password": "DialyCoreDemo!2026",
+        },
+    )
+    assert login.status_code == 403
+
+    connection = sqlite3.connect(path)
+    admin_id = connection.execute(
+        "SELECT user_id FROM users WHERE email = ?",
+        ("admin@demo.dialycore.local",),
+    ).fetchone()[0]
+    connection.close()
+    token = security.create_access_token({"sub": str(admin_id), "role": "admin"})
+    headers = {"Authorization": f"Bearer {token}"}
+
+    assert client.get("/api/auth/users", headers=headers).status_code == 403
+    assert client.post(
+        "/api/patients",
+        json={
+            "first_name_ar": "اختبار",
+            "last_name_ar": "عام",
+            "gender": "M",
+            "id_number": "DEMO-PUBLIC-WRITE",
+        },
+        headers=headers,
+    ).status_code == 403

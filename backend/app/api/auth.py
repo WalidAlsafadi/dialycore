@@ -5,12 +5,13 @@ from sqlalchemy.orm import Session
 
 from ..db.database import get_db
 from ..db.models import User, AuditLog
+from ..core import security
 from ..schemas.auth import (
     LoginRequest, TokenResponse, UserRead, UserCreate, UserUpdate, ChangePassword,
 )
 from ..core.security import (
     hash_password, verify_password, create_access_token,
-    get_current_user, require_admin, require_write_access, DEMO_GUEST_ENABLED,
+    get_current_user, require_admin, require_write_access,
 )
 
 router = APIRouter(prefix="/api/auth", tags=["Auth"])
@@ -18,6 +19,11 @@ router = APIRouter(prefix="/api/auth", tags=["Auth"])
 
 @router.post("/login", response_model=TokenResponse)
 def login(body: LoginRequest, db: Session = Depends(get_db)):
+    if security.PUBLIC_DEMO_MODE:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Staff sign-in is disabled in the public demo",
+        )
     user = db.query(User).filter(User.email == body.email).first()
     if not user or not verify_password(body.password, user.password_hash):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid email or password")
@@ -44,12 +50,17 @@ def login(body: LoginRequest, db: Session = Depends(get_db)):
 @router.post("/guest", response_model=TokenResponse)
 def guest_login(db: Session = Depends(get_db)):
     """Issue a read-only visitor session without asking for credentials."""
-    if not DEMO_GUEST_ENABLED:
+    if not security.DEMO_GUEST_ENABLED:
         raise HTTPException(status_code=404, detail="Guest access is not enabled")
 
     email = "guest@demo.dialycore.local"
     user = db.query(User).filter(User.email == email).first()
     if user is None:
+        if security.PUBLIC_DEMO_MODE:
+            raise HTTPException(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                detail="Demo data is unavailable",
+            )
         user = User(
             email=email,
             full_name="Guest Visitor",
@@ -63,6 +74,9 @@ def guest_login(db: Session = Depends(get_db)):
         raise HTTPException(status_code=403, detail="Guest access is unavailable")
 
     token = create_access_token({"sub": str(user.user_id), "role": "guest"})
+    if security.PUBLIC_DEMO_MODE:
+        return TokenResponse(access_token=token)
+
     db.add(AuditLog(
         user_id=user.user_id,
         action="GUEST_LOGIN",

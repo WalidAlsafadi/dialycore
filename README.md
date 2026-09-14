@@ -102,6 +102,10 @@ For local testing, the generator also creates three staff accounts. All use the 
 
 These credentials are intentionally obvious demonstration fixtures. Never reuse them for an internet-facing deployment.
 
+For an internet-facing synthetic demonstration, enable `PUBLIC_DEMO_MODE=true`.
+That server-side mode disables staff password login, administrator access, and
+all mutations while retaining the read-only guest flow.
+
 ## Synthetic demo dataset
 
 ```powershell
@@ -159,6 +163,11 @@ Read [CONTRIBUTING.md](CONTRIBUTING.md) and [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT
 - Replace demo accounts and disable guest access unless the deployment contains synthetic public-demo data only.
 - Add reviewed migrations, production persistence, backups, monitoring, audit retention, and disaster recovery.
 - Complete local clinical, privacy, security, regulatory, and accessibility reviews.
+
+For the constrained public synthetic-demo container and Render Blueprint, see
+[Public demo deployment](docs/deployment/public-demo.md). This profile rebuilds
+the fictional SQLite dataset on every start and is intentionally separate from
+the requirements of a real clinical deployment.
 
 DialyCore is not a certified medical device, is not medical advice, and makes no compliance or production-readiness claim.
 

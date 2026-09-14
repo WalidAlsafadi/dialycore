@@ -29,6 +29,9 @@ JWT_EXPIRE_MINUTES = int(os.getenv("JWT_EXPIRE_MINUTES", "480"))
 DEMO_GUEST_ENABLED = os.getenv(
     "ENABLE_DEMO_GUEST", "true" if APP_ENV in {"development", "demo"} else "false"
 ).lower() in {"1", "true", "yes", "on"}
+PUBLIC_DEMO_MODE = os.getenv("PUBLIC_DEMO_MODE", "false").lower() in {
+    "1", "true", "yes", "on",
+}
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/login")
@@ -74,6 +77,11 @@ def get_current_user(
 
 
 def require_admin(current_user: User = Depends(get_current_user)) -> User:
+    if PUBLIC_DEMO_MODE:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Administrative access is disabled in the public demo",
+        )
     if current_user.role != "admin":
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Admin access required")
     return current_user
@@ -81,6 +89,11 @@ def require_admin(current_user: User = Depends(get_current_user)) -> User:
 
 def require_write_access(current_user: User = Depends(get_current_user)) -> User:
     """Allow mutations for staff roles while keeping visitor sessions read-only."""
+    if PUBLIC_DEMO_MODE:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Changes are disabled in the public demo",
+        )
     if current_user.role not in {"admin", "doctor", "nurse"}:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,

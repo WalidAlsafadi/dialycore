@@ -4,7 +4,10 @@ import type {
   ViralSerology, Anticoagulation, IvAccess, DryWeight, Culture,
 } from "../types";
 
-const BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:8000";
+// Production defaults to the same origin used by the compiled frontend. Local
+// Vite development defaults to the standalone API unless explicitly overridden.
+const BASE = import.meta.env.VITE_API_BASE_URL
+  ?? (import.meta.env.DEV ? "http://localhost:8000" : "");
 
 // ---------------------------------------------------------------------------
 // Token helpers

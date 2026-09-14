@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: dialycore-demo
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: PUBLIC_DEMO_MODE
+        value: "true"
+      - key: ENABLE_DEMO_GUEST
+        value: "true"
+      - key: DATABASE_URL
+        value: sqlite:////app/data/dialycore_demo.db
+      - key: FRONTEND_DIST_DIR
+        value: /app/frontend-dist
+      - key: CORS_ORIGINS
+        value: ""
+      - key: JWT_SECRET
+        generateValue: true
+      - key: DEMO_PATIENT_COUNT
+        value: "300"
+      - key: DEMO_SEED
+        value: "2026"
