@@ -1,11 +1,10 @@
 import os
 from contextlib import asynccontextmanager
-from pathlib import Path
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.staticfiles import StaticFiles
 from dotenv import load_dotenv
+from sqlalchemy import text
 
 from .db.database import Base, engine
 from .api.auth import router as auth_router
@@ -64,6 +63,8 @@ app.add_middleware(
 # Health check
 @app.get("/health")
 def health():
+    with engine.connect() as connection:
+        connection.execute(text("SELECT 1"))
     return {"status": "ok"}
 
 
@@ -72,12 +73,3 @@ app.include_router(auth_router)
 app.include_router(patients_router)
 app.include_router(sessions_router)
 app.include_router(clinical_router)
-
-# A production image can serve the compiled client from the same origin. Local
-# development keeps using Vite when FRONTEND_DIST_DIR is unset.
-configured_frontend_dist = os.getenv("FRONTEND_DIST_DIR", "").strip()
-if configured_frontend_dist:
-    frontend_dist = Path(configured_frontend_dist).resolve()
-    if not (frontend_dist / "index.html").is_file():
-        raise RuntimeError(f"FRONTEND_DIST_DIR does not contain index.html: {frontend_dist}")
-    app.mount("/", StaticFiles(directory=frontend_dist, html=True), name="frontend")

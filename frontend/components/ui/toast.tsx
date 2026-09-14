@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { CheckCircle, AlertCircle, X } from "lucide-react";
+import { CheckCircle, AlertCircle, Info, X } from "lucide-react";
 
-export type ToastType = "success" | "error";
+export type ToastType = "success" | "error" | "info";
 
 export interface ToastMessage {
     id: number;
@@ -20,6 +20,7 @@ let _addToast: ((type: ToastType, message: string) => void) | null = null;
 export const toast = {
     success: (message: string) => _addToast?.("success", message),
     error: (message: string) => _addToast?.("error", message),
+    info: (message: string) => _addToast?.("info", message),
 };
 
 export function ToastContainer() {
@@ -43,13 +44,17 @@ export function ToastContainer() {
                     key={t.id}
                     className={`pointer-events-auto flex items-start gap-3 rounded-lg border p-4 shadow-lg animate-in slide-in-from-bottom-4 transition-all duration-300 ${t.type === "success"
                             ? "bg-green-50 border-green-200 text-green-800"
-                            : "bg-red-50 border-red-200 text-red-800"
+                            : t.type === "error"
+                                ? "bg-red-50 border-red-200 text-red-800"
+                                : "bg-sky-50 border-sky-200 text-sky-900"
                         }`}
                 >
                     {t.type === "success" ? (
                         <CheckCircle className="h-5 w-5 flex-shrink-0 mt-0.5 text-green-600" />
-                    ) : (
+                    ) : t.type === "error" ? (
                         <AlertCircle className="h-5 w-5 flex-shrink-0 mt-0.5 text-red-600" />
+                    ) : (
+                        <Info className="h-5 w-5 flex-shrink-0 mt-0.5 text-sky-600" />
                     )}
                     <span className="text-sm font-medium flex-1">{t.message}</span>
                     <button

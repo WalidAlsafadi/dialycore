@@ -48,26 +48,31 @@ function isNavigationState(value: unknown): value is NavigationState {
 function navigationUrl(state: NavigationState) {
   switch (state.page) {
     case "dashboard":
-      return "#/dashboard";
+      return "/dashboard";
     case "patients":
-      return "#/patients";
+      return "/patients";
     case "patient_details":
-      return `#/patients/${state.id ?? ""}`;
+      return `/patients/${state.id ?? ""}`;
     case "session_details":
       return state.id === 0
-        ? `#/patients/${state.parentId ?? ""}/sessions/new`
-        : `#/sessions/${state.id ?? ""}`;
+        ? `/patients/${state.parentId ?? ""}/sessions/new`
+        : `/sessions/${state.id ?? ""}`;
     case "schedule":
-      return "#/schedule";
+      return "/schedule";
     case "unit_stats":
-      return "#/analytics";
+      return "/analytics";
     default:
-      return "#/login";
+      return "/login";
   }
 }
 
-function navigationFromHash(): NavigationState {
-  const segments = window.location.hash.replace(/^#\/?/, "").split("/").filter(Boolean);
+function navigationFromLocation(): NavigationState {
+  // Convert old hash-based bookmarks once, then keep clean browser paths.
+  const legacyHashPath = window.location.hash.startsWith("#/")
+    ? window.location.hash.slice(1)
+    : "";
+  const routePath = legacyHashPath || window.location.pathname;
+  const segments = routePath.replace(/^\/?/, "").split("/").filter(Boolean);
   if (segments[0] === "dashboard") return { page: "dashboard" };
   if (segments[0] === "patients" && segments[1]) {
     const patientId = Number(segments[1]);
@@ -106,7 +111,7 @@ export default function App() {
   useEffect(() => {
     const requestedState = isNavigationState(window.history.state)
       ? window.history.state
-      : navigationFromHash();
+      : navigationFromLocation();
     const token = getToken();
     if (token) {
       api.me()
@@ -135,7 +140,7 @@ export default function App() {
     const handlePopState = (event: PopStateEvent) => {
       const destination = isNavigationState(event.state)
         ? event.state
-        : navigationFromHash();
+        : navigationFromLocation();
 
       if (destination.page !== "login" && !getToken()) {
         const loginState: NavigationState = { page: "login" };
@@ -260,7 +265,12 @@ export default function App() {
   };
 
   if (currentPage === "login") {
-    return <div className="min-h-screen bg-muted/20">{renderPage()}</div>;
+    return (
+      <>
+        <div className="min-h-screen bg-muted/20">{renderPage()}</div>
+        <ToastContainer />
+      </>
+    );
   }
 
   return (

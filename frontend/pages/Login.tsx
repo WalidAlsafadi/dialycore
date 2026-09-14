@@ -49,12 +49,17 @@ export default function Login({
   const handleGuestLogin = async () => {
     setGuestLoading(true);
     setError("");
+    const wakeNoticeTimer = window.setTimeout(() => {
+      toast.info("The demo is waking up. The first visit may take up to a minute.");
+    }, 2000);
 
     try {
       const user = await api.loginAsGuest();
+      window.clearTimeout(wakeNoticeTimer);
       toast.success("Welcome to the DialyCore demo");
       onLogin(user);
     } catch {
+      window.clearTimeout(wakeNoticeTimer);
       setError("The demo is temporarily unavailable. Please try again.");
       toast.error("Unable to start the demo");
       setGuestLoading(false);
@@ -162,7 +167,7 @@ export default function Login({
             {guestLoading ? (
               <span className="login-button-status">
                 <Loader2 className="login-spinner" aria-hidden="true" />
-                Opening demo...
+                Starting demo...
               </span>
             ) : (
               <>
