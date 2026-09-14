@@ -18,6 +18,7 @@ import {
 } from "../components/ui/table";
 import { Button } from "../components/ui/button";
 import { Badge } from "../components/ui/badge";
+import { Spinner } from "../components/ui/spinner";
 import {
   Users,
   ArrowRight,
@@ -364,8 +365,9 @@ export default function Dashboard({
           </CardHeader>
           <CardContent>
             {loading ? (
-              <div className="flex items-center justify-center h-40">
-                Loading schedule...
+              <div className="flex items-center justify-center h-40" role="status">
+                <Spinner size="lg" className="text-primary" />
+                <span className="sr-only">Loading schedule</span>
               </div>
             ) : (
               <Table>

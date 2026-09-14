@@ -26,6 +26,7 @@ import { Select } from "../components/ui/select";
 import { Plus, Search, FileText } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { toast } from "../components/ui/toast";
+import { Spinner } from "../components/ui/spinner";
 
 export default function Patients({
   onNavigate,
@@ -157,8 +158,11 @@ export default function Patients({
             <TableBody>
               {loading ? (
                 <TableRow>
-                  <TableCell colSpan={9} className="text-center h-24">
-                    Loading...
+                  <TableCell colSpan={9} className="h-24">
+                    <div className="flex justify-center" role="status">
+                      <Spinner className="text-primary" />
+                      <span className="sr-only">Loading patients</span>
+                    </div>
                   </TableCell>
                 </TableRow>
               ) : filteredPatients.length === 0 ? (

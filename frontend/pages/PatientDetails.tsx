@@ -22,6 +22,7 @@ import {
   CardDescription,
 } from "../components/ui/card";
 import { Button } from "../components/ui/button";
+import { Spinner } from "../components/ui/spinner";
 import {
   Tabs,
   TabsList,
@@ -816,8 +817,9 @@ export default function PatientDetails({
 
   if (loading)
     return (
-      <div className="flex justify-center items-center h-screen text-sm">
-        Loading patient data...
+      <div className="flex justify-center items-center h-screen" role="status">
+        <Spinner size="lg" className="text-primary" />
+        <span className="sr-only">Loading patient data</span>
       </div>
     );
   if (!patient)

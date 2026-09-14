@@ -33,8 +33,8 @@ The public demo uses two services:
   database on every container start.
 
 This keeps the public landing and Login pages immediately available even when
-the free backend is asleep. If the API takes longer than two seconds, the Login
-page explains that the demo is waking up and might take up to a minute.
+the free backend is asleep. When a visitor selects **Explore the Demo**, the
+frontend immediately explains that the first visit might take up to a minute.
 
 ## 1. Deploy the API on Render
 

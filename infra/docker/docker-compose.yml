@@ -1,3 +1,5 @@
+name: dialycore
+
 services:
   backend:
     build:

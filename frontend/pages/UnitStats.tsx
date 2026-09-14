@@ -8,6 +8,7 @@ import {
   CardTitle,
   CardDescription,
 } from "../components/ui/card";
+import { Spinner } from "../components/ui/spinner";
 
 import {
   BarChart,
@@ -212,7 +213,10 @@ export default function UnitStats({
       </div>
 
       {loading ? (
-        <div className="text-center py-12 text-sm">Loading statistics...</div>
+        <div className="flex justify-center py-12" role="status">
+          <Spinner size="lg" className="text-primary" />
+          <span className="sr-only">Loading statistics</span>
+        </div>
       ) : (
         <>
           {/* KPI Cards Row 1 — matching Dashboard style */}

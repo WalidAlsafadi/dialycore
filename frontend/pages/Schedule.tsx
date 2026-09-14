@@ -9,6 +9,7 @@ import {
 } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { Badge } from "../components/ui/badge";
+import { Spinner } from "../components/ui/spinner";
 import {
   ArrowLeft,
   Users,
@@ -265,8 +266,9 @@ export default function Schedule({
 
       {/* Schedule Grid — Grouped by Room, then Period */}
       {loading ? (
-        <div className="text-center py-12 text-sm text-muted-foreground">
-          Loading schedules...
+        <div className="flex justify-center py-12" role="status">
+          <Spinner size="lg" className="text-primary" />
+          <span className="sr-only">Loading schedules</span>
         </div>
       ) : daySchedules.length === 0 ? (
         <Card>

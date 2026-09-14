@@ -31,7 +31,7 @@ export function ToastContainer() {
         setToasts((prev) => [...prev, { id, type, message }]);
         setTimeout(() => {
             setToasts((prev) => prev.filter((t) => t.id !== id));
-        }, 4000);
+        }, type === "info" ? 8000 : 4000);
     };
 
     const dismiss = (id: number) =>

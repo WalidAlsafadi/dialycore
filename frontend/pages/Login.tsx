@@ -5,7 +5,6 @@ import {
   Eye,
   EyeOff,
   Github,
-  Loader2,
   Lock,
   Mail,
 } from "lucide-react";
@@ -13,6 +12,7 @@ import { BrandLogo, BrandPanel } from "../components/auth/BrandPanel";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
+import { Spinner } from "../components/ui/spinner";
 import { toast } from "../components/ui/toast";
 import { api } from "../services/api";
 import { User as UserType } from "../types";
@@ -49,17 +49,13 @@ export default function Login({
   const handleGuestLogin = async () => {
     setGuestLoading(true);
     setError("");
-    const wakeNoticeTimer = window.setTimeout(() => {
-      toast.info("The demo is waking up. The first visit may take up to a minute.");
-    }, 2000);
+    toast.info("The demo is starting. The first visit may take up to a minute.");
 
     try {
       const user = await api.loginAsGuest();
-      window.clearTimeout(wakeNoticeTimer);
       toast.success("Welcome to the DialyCore demo");
       onLogin(user);
     } catch {
-      window.clearTimeout(wakeNoticeTimer);
       setError("The demo is temporarily unavailable. Please try again.");
       toast.error("Unable to start the demo");
       setGuestLoading(false);
@@ -138,7 +134,7 @@ export default function Login({
             <Button type="submit" className="login-primary-button" disabled={controlsDisabled}>
               {loading ? (
                 <span className="login-button-status">
-                  <Loader2 className="login-spinner" aria-hidden="true" />
+                  <Spinner size="sm" className="login-spinner" />
                   Signing in...
                 </span>
               ) : (
@@ -166,7 +162,7 @@ export default function Login({
           >
             {guestLoading ? (
               <span className="login-button-status">
-                <Loader2 className="login-spinner" aria-hidden="true" />
+                <Spinner size="sm" className="login-spinner" />
                 Starting demo...
               </span>
             ) : (

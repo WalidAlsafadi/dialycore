@@ -5,6 +5,7 @@ import { LayoutDashboard, Users, LogOut, Menu, X, Calendar, Activity } from "luc
 import { User } from "./types";
 import { logoutApi, getToken, api } from "./services/api";
 import { ToastContainer } from "./components/ui/toast";
+import { Spinner } from "./components/ui/spinner";
 import { BrandLogo } from "./components/auth/BrandPanel";
 
 const Dashboard = lazy(() => import("./pages/Dashboard"));
@@ -274,8 +275,9 @@ export default function App() {
   }
 
   return (
-    <div className="flex min-h-screen w-full flex-col">
-      <header className="sticky top-0 z-10 border-b bg-background shadow-sm">
+    <>
+      <div className="flex min-h-screen w-full flex-col">
+        <header className="sticky top-0 z-10 border-b bg-background shadow-sm">
         <div className="flex h-16 sm:h-20 items-center justify-between px-4 sm:px-6">
           <div className="flex items-center">
             <BrandLogo compact />
@@ -442,21 +444,23 @@ export default function App() {
             </div>
           </nav>
         )}
-      </header>
-      <main className="flex-1 bg-background p-4 sm:p-6 md:p-8">
-        <div className="mx-auto w-full max-w-7xl">
-          <Suspense
-            fallback={
-              <div className="flex min-h-48 items-center justify-center text-sm text-muted-foreground">
-                Loading workspace...
-              </div>
-            }
-          >
-            {renderPage()}
-          </Suspense>
-        </div>
-      </main>
+        </header>
+        <main className="flex-1 bg-background p-4 sm:p-6 md:p-8">
+          <div className="mx-auto w-full max-w-7xl">
+            <Suspense
+              fallback={
+                <div className="flex min-h-48 items-center justify-center" role="status">
+                  <Spinner size="lg" className="text-primary" />
+                  <span className="sr-only">Loading workspace</span>
+                </div>
+              }
+            >
+              {renderPage()}
+            </Suspense>
+          </div>
+        </main>
+      </div>
       <ToastContainer />
-    </div>
+    </>
   );
 }
